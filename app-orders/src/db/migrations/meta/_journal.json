@@ -8,6 +8,13 @@
       "when": 1749138962481,
       "tag": "0000_condemned_the_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1749309440012,
+      "tag": "0001_panoramic_xavin",
+      "breakpoints": true
     }
   ]
 }
