@@ -36,3 +36,7 @@ services:
 
 volumes:
   rabbitmq_data:
+
+
+# event-orders postgresql://neondb_owner:npg_fARubM5wE2iF@ep-restless-snow-a415s1p1.us-east-1.aws.neon.tech/neondb?sslmode=require
+# event-invoices postgresql://neondb_owner:npg_CP9ecnHY4xNQ@ep-muddy-river-a4oeo5ib-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
