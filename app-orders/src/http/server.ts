@@ -10,6 +10,7 @@ import { channels } from '../../broker/channels/index.ts'
 import { db } from '../db/client.ts'
 import { schema } from '../db/schema/index.ts'
 import { randomUUID } from 'node:crypto'
+import { dispatchOrderCreated } from '../../broker/messages/order-created.ts'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -34,13 +35,30 @@ app.post('/orders', {
 
     console.log('Creating an order with amount', amount)
 
-    channels.orders.sendToQueue('orders', Buffer.from(JSON.stringify({ amount })))
+    const orderId = randomUUID()
 
-    await db.insert(schema.orders).values({
-        id: randomUUID(),
-        customerId: '2de01b0d-fb88-43c1-b462-ba4c72f51af8',
-        amount,
-    })
+    try {
+        await dispatchOrderCreated({
+            orderId,
+            amount,
+            customer: {
+                id: '2de01b0d-fb88-43c1-b462-ba4c72f51af8'
+            }
+        });
+    } catch (err) {
+        console.error('Failed to dispatch message to RabbitMQ:', err);
+    }
+
+    try {
+        await db.insert(schema.orders).values({
+            id: randomUUID(),
+            customerId: '2de01b0d-fb88-43c1-b462-ba4c72f51af8',
+            amount,
+        })
+    } catch (err) {
+        console.log(err)
+    }
+
 
     return reply.status(201).send
 
