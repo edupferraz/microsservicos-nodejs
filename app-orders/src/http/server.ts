@@ -1,3 +1,6 @@
+import '@opentelemetry/auto-instrumentations-node/register'
+import { trace } from '@opentelemetry/api'
+
 import { fastify } from 'fastify'
 import { fastifyCors } from '@fastify/cors'
 import { z } from 'zod'
@@ -38,6 +41,18 @@ app.post('/orders', {
     const orderId = randomUUID()
 
     try {
+        await db.insert(schema.orders).values({
+            id: randomUUID(),
+            customerId: '2de01b0d-fb88-43c1-b462-ba4c72f51af8',
+            amount,
+        })
+    } catch (err) {
+        console.log(err)
+    }
+
+    trace.getActiveSpan()?.setAttribute('order_id', orderId)
+
+        try {
         await dispatchOrderCreated({
             orderId,
             amount,
@@ -48,17 +63,6 @@ app.post('/orders', {
     } catch (err) {
         console.error('Failed to dispatch message to RabbitMQ:', err);
     }
-
-    try {
-        await db.insert(schema.orders).values({
-            id: randomUUID(),
-            customerId: '2de01b0d-fb88-43c1-b462-ba4c72f51af8',
-            amount,
-        })
-    } catch (err) {
-        console.log(err)
-    }
-
 
     return reply.status(201).send
 
