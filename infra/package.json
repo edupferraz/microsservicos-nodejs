@@ -1,0 +1,15 @@
+{
+    "name": "event-node-infra",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.149",
+        "@types/node": "^18.19.111",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^6.0.0",
+        "@pulumi/awsx": "^2.0.2",
+        "@pulumi/docker-build": "^0.0.12",
+        "@pulumi/pulumi": "^3.175.0"
+    }
+}
